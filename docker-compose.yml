@@ -1,0 +1,16 @@
+services:
+  auth-db:
+    image: postgres:18-alpine
+    container_name: redpatitas_auth-db
+    environment:
+      POSTGRES_DB: auth_db
+      POSTGRES_USER: redpatitas
+      POSTGRES_PASSWORD: redpatitas
+    ports:
+      - "5432:5432"
+    volumes:
+      - auth_redpatitas_data:/var/lib/postgresql/data
+       - ./src/main/resources/db/migration/V1__auth_schema.sql:/docker-entrypoint-initdb.d/01_init.sql
+
+volumes:
+  auth_redpatitas_data:
