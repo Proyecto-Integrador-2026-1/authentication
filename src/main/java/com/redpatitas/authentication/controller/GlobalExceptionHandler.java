@@ -24,7 +24,8 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(AuthenticationDomainException.class)
 	public ResponseEntity<ApiErrorResponse> handleAuthDomain(AuthenticationDomainException ex) {
 		HttpStatus status = switch (ex.getErrorCode()) {
-			case "AUTH_EMAIL_ALREADY_EXISTS", "AUTH_PHONE_ALREADY_EXISTS" -> HttpStatus.CONFLICT;
+			case "AUTH_EMAIL_ALREADY_EXISTS", "AUTH_PHONE_ALREADY_EXISTS", "AUTH_DUPLICATE_DATA" -> HttpStatus.CONFLICT;
+			case "AUTH_PHONE_INVALID" -> HttpStatus.BAD_REQUEST;
 			case "AUTH_ACCOUNT_LOCKED", "AUTH_ACCOUNT_DISABLED" -> HttpStatus.FORBIDDEN;
 			default -> HttpStatus.UNAUTHORIZED;
 		};

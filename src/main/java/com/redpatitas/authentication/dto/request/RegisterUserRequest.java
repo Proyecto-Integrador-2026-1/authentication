@@ -10,7 +10,9 @@ import jakarta.validation.constraints.Size;
 public record RegisterUserRequest(
 		@NotBlank @Size(max = 255) @Schema(example = "Juan") String nombre,
 		@NotBlank @Size(max = 255) @Schema(example = "Perez") String apellido,
-		@NotBlank @Size(max = 50) @Schema(example = "+573001112233") String telefono,
+		@NotBlank
+		@Pattern(regexp = "^\\d{7,15}$", message = "El teléfono debe contener solo números (7-15 dígitos)")
+		@Schema(example = "3001112233") String telefono,
 		@NotBlank @Email @Schema(example = "juan.perez@correo.com") String email,
 		@NotBlank
 		@Size(min = 8, max = 128)

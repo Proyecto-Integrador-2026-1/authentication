@@ -10,7 +10,6 @@ services:
       - "5432:5432"
     volumes:
       - auth_redpatitas_data:/var/lib/postgresql/data
-       - ./src/main/resources/db/migration/V1__auth_schema.sql:/docker-entrypoint-initdb.d/01_init.sql
 
 volumes:
   auth_redpatitas_data:

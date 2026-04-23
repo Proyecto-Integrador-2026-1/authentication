@@ -1,0 +1,55 @@
+# Build outputs
+target/
+build/
+out/
+
+# Maven
+.mvn/wrapper/maven-wrapper.jar
+!.mvn/wrapper/maven-wrapper.properties
+
+# IDEs and editors
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+.classpath
+.project
+.settings/
+
+# OS files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Logs and runtime files
+*.log
+*.out
+*.err
+*.pid
+*.pid.lock
+*.tmp
+*.temp
+hs_err_pid*
+replay_pid*
+
+# Environment files and secrets
+.env
+.env.*
+*.local
+
+# Coverage / test reports
+coverage/
+reports/
+surefire-reports/
+failsafe-reports/
+test-output/
+
+# Java artifacts
+*.class
+*.jar
+*.war
+*.ear
+
+# Kotlin / Gradle leftovers if they appear
+.gradle/
