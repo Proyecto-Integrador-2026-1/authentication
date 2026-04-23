@@ -1,0 +1,44 @@
+# Build output
+target/
+build/
+out/
+
+# VCS and editor metadata
+.git/
+.idea/
+.vscode/
+*.iml
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment files and secrets
+.env
+.env.*
+*.local
+
+# Logs and temp files
+*.log
+*.out
+*.err
+*.pid
+*.pid.lock
+*.tmp
+*.temp
+
+# Test and coverage artifacts
+coverage/
+reports/
+surefire-reports/
+failsafe-reports/
+test-output/
+
+# Maven / Java intermediate files
+*.class
+*.jar
+*.war
+*.ear
+
+# Keep the files needed for the Docker build context:
+# pom.xml, src/, mvnw, mvnw.cmd and Dockerfile.

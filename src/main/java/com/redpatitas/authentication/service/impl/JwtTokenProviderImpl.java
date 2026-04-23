@@ -3,6 +3,8 @@ package com.redpatitas.authentication.service.impl;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.crypto.SecretKey;
 
@@ -30,8 +32,10 @@ public class JwtTokenProviderImpl implements JwtTokenProvider {
 
 		return Jwts.builder()
 				.subject(user.getId().toString())
+				.claim("userid", user.getId().toString())
 				.claim("email", user.getEmail())
-				.claim("roles", user.getRoles())
+				.claim("roles", user.getRoles() == null ? List.of()
+						: user.getRoles().stream().map(Object::toString).collect(Collectors.toList()))
 				.issuedAt(Date.from(now))
 				.expiration(Date.from(exp))
 				.signWith(key)

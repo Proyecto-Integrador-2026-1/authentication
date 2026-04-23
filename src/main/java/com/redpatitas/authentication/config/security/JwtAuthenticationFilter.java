@@ -55,6 +55,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		String path = request.getServletPath();
 		return MATCHER.match("/api/v1/auth/login", path)
 				|| MATCHER.match("/api/v1/auth/refresh", path)
+				|| MATCHER.match("/api/v1/auth/register", path)
 				|| MATCHER.match("/v3/api-docs/**", path)
 				|| MATCHER.match("/swagger-ui/**", path)
 				|| MATCHER.match("/swagger-ui.html", path);
@@ -80,6 +81,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 					.getPayload();
 
 			String userId = claims.getSubject();
+			if (userId == null || userId.isBlank()) {
+				userId = claims.get("userid", String.class);
+			}
 			String email = claims.get("email", String.class);
 			List<String> roles = extractRoles(claims.get("roles"));
 			Collection<GrantedAuthority> authorities = new ArrayList<>();

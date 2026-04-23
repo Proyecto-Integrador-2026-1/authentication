@@ -8,11 +8,9 @@
 		<version>4.0.5</version>
 		<relativePath/>
 	</parent>
-	<groupId>com.logistics</groupId>
-	<artifactId>authentication-service</artifactId>
+	<groupId>com.redpatitas</groupId>
+		<artifactId>redpatitas-authentication</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>authentication-service</name>
-	<description>Microservicio de autenticación (login JWT) — arquitectura hexagonal</description>
 	<properties>
 		<java.version>22</java.version>
 		<jjwt.version>0.12.6</jjwt.version>
@@ -122,7 +120,7 @@
 	</dependencies>
 
 	<build>
-		<finalName>authentication-service</finalName>
+		<finalName>redpatitas-authentication</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
