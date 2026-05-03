@@ -23,6 +23,7 @@ import com.redpatitas.authentication.service.interfaces.RegisterUserUseCase.Regi
 import com.redpatitas.authentication.service.interfaces.RefreshTokenUseCase;
 import com.redpatitas.authentication.service.interfaces.RefreshTokenUseCase.RefreshCommand;
 import com.redpatitas.authentication.dto.request.LoginRequest;
+import com.redpatitas.authentication.dto.request.LogoutRequest;
 import com.redpatitas.authentication.dto.request.RegisterUserRequest;
 import com.redpatitas.authentication.dto.response.LoginResponseBody;
 import com.redpatitas.authentication.dto.response.MeResponseBody;
@@ -144,5 +145,12 @@ public class AuthController {
 				.build()
 				.toUriString();
 		return Link.of(href, rel);
+	}
+
+	@Operation(summary = "Logout", description = "Revoca el refresh token activo")
+	@PostMapping("/logout")
+	public ResponseEntity<Void> logout(@Valid @RequestBody LogoutRequest request) {
+		refreshTokenUseCase.revoke(request.refreshToken());
+		return ResponseEntity.noContent().build();
 	}
 }

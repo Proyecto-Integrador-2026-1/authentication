@@ -63,4 +63,19 @@ public class RefreshTokenService implements RefreshTokenUseCase {
 				newRefreshPlain,
 				jwtTokenProvider.getRefreshTokenTtlSeconds());
 	}
+
+
+	@Override
+	@Transactional
+	public void revoke(String rawRefreshToken) {
+		if (rawRefreshToken == null || rawRefreshToken.isBlank()) {
+			throw new AuthenticationDomainException("INVALID_REFRESH", "Refresh token requerido");
+		}
+		Instant now = clock.instant();
+		String hash = refreshTokenIssuer.sha256Hex(rawRefreshToken.trim());
+		var active = refreshTokens.findActiveByTokenHash(hash, now)
+				.orElseThrow(() -> new AuthenticationDomainException("INVALID_REFRESH", "Refresh token inválido o revocado"));
+		refreshTokens.revokeById(active.id()); // revoca el token específico
+	}
+	
 }
