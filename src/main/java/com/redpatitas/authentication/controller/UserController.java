@@ -1,6 +1,9 @@
 package com.redpatitas.authentication.controller;
 
+import com.redpatitas.authentication.dto.request.BatchContactRequest;
 import com.redpatitas.authentication.dto.request.UpdateUserRequest;
+import com.redpatitas.authentication.dto.response.BatchContactResponse;
+import com.redpatitas.authentication.dto.response.ContactInfoResponse;
 import com.redpatitas.authentication.dto.response.ProfileUpdateResponse;
 import com.redpatitas.authentication.config.security.JwtPrincipal;
 import com.redpatitas.authentication.entity.UserEntity;
@@ -11,8 +14,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -20,6 +25,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import jakarta.servlet.http.HttpServletRequest;
+
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -29,6 +37,8 @@ public class UserController {
 
     private final UpdateUserProfile updateUserProfileUseCase;
     private final UserJpaRepository userRepository;
+    @Value("${auth.internal.api-key}")
+    private String internalApiKey;
 
 
     // Obtener perfil completo del usuario autenticado
@@ -77,5 +87,37 @@ public class UserController {
                 .build()
                 .toUriString();
         return Link.of(href, rel);
+    }
+
+    @GetMapping("/internal/{userId}/contact")
+    public ResponseEntity<ContactInfoResponse> getContactInfoInternal(
+            @PathVariable UUID userId,
+            @RequestHeader("X-Internal-API-Key") String apiKey) {
+        if (!internalApiKey.equals(apiKey)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> new AuthenticationDomainException("USER_NOT_FOUND", "Usuario no encontrado"));
+        return ResponseEntity.ok(new ContactInfoResponse(
+            user.getNombre(), user.getApellido()
+        ));
+    }
+
+    @PostMapping("/internal/batch/contact")
+    public ResponseEntity<BatchContactResponse> getBatchContactInfoInternal(
+            @RequestBody BatchContactRequest request,
+            @RequestHeader("X-Internal-API-Key") String apiKey) {
+        if (!internalApiKey.equals(apiKey)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        Map<UUID, ContactInfoResponse> result = new HashMap<>();
+        for (UUID userId : request.userIds()) {
+            userRepository.findById(userId).ifPresent(user -> 
+                result.put(userId, new ContactInfoResponse(
+                    user.getNombre(), user.getApellido()
+                ))
+            );
+        }
+        return ResponseEntity.ok(new BatchContactResponse(result));
     }
 }
