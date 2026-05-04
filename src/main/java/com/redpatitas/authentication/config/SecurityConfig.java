@@ -102,7 +102,13 @@ public class SecurityConfig {
 	public CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration config = new CorsConfiguration();
 		List<String> origins = corsProperties.allowedOriginList();
-		config.setAllowedOrigins(origins.isEmpty() ? List.of("http://localhost:3000") : origins);
+		if (origins.isEmpty()) {
+			config.setAllowedOrigins(List.of("http://localhost:3000"));
+		} else if (origins.contains("*")) {
+			config.setAllowedOriginPatterns(List.of("*"));
+		} else {
+			config.setAllowedOrigins(origins);
+		}
 		config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
 		config.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-Trace-Id"));
 		config.setExposedHeaders(List.of("X-Trace-Id"));
